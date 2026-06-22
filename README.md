@@ -97,6 +97,16 @@ npm run dev                # http://localhost:5173
 | Teacher | teacher@demo.com | demo1234 |
 | Student | student@demo.com | demo1234 |
 
+## Deployment
+
+**Frontend on Vercel · Backend on Render · Database on Neon · Cache/queue on Upstash Redis** — all redeploy automatically on push to `main`.
+
+1. **Neon** — create a Postgres project, copy the **pooled** connection string (`...-pooler...?sslmode=require`).
+2. **Upstash** — create a Redis database, copy the `rediss://` TLS URL.
+3. **Render** — New → Blueprint, point at this repo (uses [render.yaml](render.yaml)); fill in `DATABASE_URL`, `REDIS_URL`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `FRONTEND_URL` (your Vercel URL), plus any optional API keys. Render runs `prisma migrate deploy` on every deploy.
+4. **Vercel** — Import the repo (uses [vercel.json](vercel.json)); set `VITE_API_URL` to your Render service URL.
+5. Once both URLs are known, update `FRONTEND_URL` on Render and `VITE_API_URL` on Vercel to point at each other, then redeploy both.
+
 ## Key Engineering Decisions
 
 - **Controlled data layer** — students never query datasets directly; every chart/question is pre-computed server-side from teacher-curated data, removing an entire class of data-exposure risk.

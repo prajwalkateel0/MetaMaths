@@ -1,7 +1,12 @@
 import axios from 'axios'
 
+// In dev, Vite proxies '/api' to the local backend (see vite.config.js).
+// In production the frontend and backend are on different domains, so
+// VITE_API_URL must point at the deployed backend origin (e.g. Render URL).
+const API_BASE = `${import.meta.env.VITE_API_URL || ''}/api/v1`
+
 const api = axios.create({
-  baseURL: '/api/v1',
+  baseURL: API_BASE,
   withCredentials: true,
   headers: { 'Content-Type': 'application/json' },
 })
@@ -36,7 +41,7 @@ api.interceptors.response.use(
       original._retry = true
       isRefreshing = true
       try {
-        const { data } = await axios.post('/api/v1/auth/refresh', {}, { withCredentials: true })
+        const { data } = await axios.post(`${API_BASE}/auth/refresh`, {}, { withCredentials: true })
         const { accessToken } = data
         localStorage.setItem('accessToken', accessToken)
         api.defaults.headers.common.Authorization = `Bearer ${accessToken}`

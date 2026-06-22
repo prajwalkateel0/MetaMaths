@@ -4,9 +4,13 @@ let socket = null
 
 export const getSocket = () => socket
 
+// Same origin in dev (Vite proxies /socket.io); a different origin in
+// production, so VITE_API_URL must point at the deployed backend.
+const SOCKET_BASE = import.meta.env.VITE_API_URL || ''
+
 export const connectSocket = (token) => {
   if (socket?.connected) return socket
-  socket = io('/sessions', {
+  socket = io(`${SOCKET_BASE}/sessions`, {
     auth: { token },
     transports: ['websocket', 'polling'],
     reconnectionAttempts: 5,

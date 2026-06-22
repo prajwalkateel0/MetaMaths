@@ -5,6 +5,15 @@ const authService = require('./auth.service')
 
 const router = express.Router()
 
+// Cross-site cookie (frontend and backend live on different domains in production)
+// requires sameSite: 'none', which in turn requires secure: true.
+const refreshCookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+}
+
 router.post('/register', asyncHandler(async (req, res) => {
   const { email, password, displayName, role } = req.body
   if (!email || !password || !displayName) return res.status(400).json({ detail: 'Missing required fields' })
@@ -15,20 +24,20 @@ router.post('/register', asyncHandler(async (req, res) => {
 router.post('/login', asyncHandler(async (req, res) => {
   const { email, password } = req.body
   const result = await authService.login({ email, password, userAgent: req.headers['user-agent'], ip: req.ip })
-  res.cookie('refreshToken', result.refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 })
+  res.cookie('refreshToken', result.refreshToken, refreshCookieOptions)
   res.json({ accessToken: result.accessToken, user: result.user })
 }))
 
 router.post('/refresh', asyncHandler(async (req, res) => {
   const token = req.cookies?.refreshToken
   const result = await authService.refresh(token)
-  res.cookie('refreshToken', result.refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 })
+  res.cookie('refreshToken', result.refreshToken, refreshCookieOptions)
   res.json({ accessToken: result.accessToken })
 }))
 
 router.post('/logout', asyncHandler(async (req, res) => {
   await authService.logout(req.cookies?.refreshToken)
-  res.clearCookie('refreshToken')
+  res.clearCookie('refreshToken', { httpOnly: true, secure: refreshCookieOptions.secure, sameSite: refreshCookieOptions.sameSite })
   res.status(204).end()
 }))
 
