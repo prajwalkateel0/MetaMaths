@@ -1,6 +1,6 @@
 # MetaMaths
 
-**Live app:** [meta-maths.vercel.app](https://meta-math.vercel.app)
+**Live app:** [meta-math.vercel.app](https://meta-math.vercel.app)
 
 **A full-stack classroom platform that teaches secondary-school maths through real esports data.**
 
