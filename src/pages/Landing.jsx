@@ -32,9 +32,6 @@ export default function Landing() {
 
       {/* Hero */}
       <section className="max-w-6xl mx-auto px-6 py-24 text-center">
-        <div className="inline-flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 rounded-full px-4 py-1.5 text-sm text-primary-400 mb-6">
-          <Zap size={14} /> MSc Dissertation Project · University of Leicester
-        </div>
         <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
           Teach Maths Through <span className="esport-text">Esports Data</span>
         </h1>
