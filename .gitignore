@@ -16,6 +16,7 @@ build/
 .vs/
 .vscode/
 .idea/
+.claude/settings.local.json
 
 # Logs
 *.log
