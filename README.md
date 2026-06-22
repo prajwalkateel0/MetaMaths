@@ -2,7 +2,6 @@
 
 **A full-stack classroom platform that teaches secondary-school maths through real esports data.**
 
-MSc Individual Project (CO7201) · University of Leicester · Supervisor: J Drake
 
 Instead of dry textbook problems, students answer maths questions generated from real-world data — League of Legends champion stats, Dota 2 hero win rates, CS2 match results, and more. Teachers import datasets, build charts, auto-generate quizzes, and run live classroom sessions for 30+ students with a real-time leaderboard.
 
